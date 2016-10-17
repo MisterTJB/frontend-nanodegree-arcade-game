@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(wave) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -8,7 +8,7 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = -Math.floor((Math.random() * 1000));
     this.y = Math.floor((Math.random() * 3) + 1) * 100;
-    this.speed = Math.floor((Math.random() * 75) + 50);
+    this.speed = Math.floor((Math.random() * 75) + (50 * wave));
 };
 
 // Update the enemy's position, required method for game
@@ -22,7 +22,7 @@ Enemy.prototype.update = function(dt) {
 
 Enemy.prototype.intersects = function(other) {
   var rightBound = this.x + 75;
-  var leftBound = this.x - 75;
+  var leftBound = this.x - 50;
   var topBound = this.y - 50;
   var bottomBound = this.y + 50;
 
@@ -48,25 +48,23 @@ var Player = function() {
   this.points = 0;
   this.hit = false;
   this.lives = 3
+  this.alive = true;
 }
 
 Player.prototype.update = function() {
   if (this.y == 0) {
-    this.y = 380;
-    this.x = 200;
     this.points++;
+    this.resetPosition()
   }
 
   if (this.hit) {
     this.hit = false;
     this.lives--;
-    this.y = 380;
-    this.x = 200;
+    this.resetPosition()
   }
 
   if (this.lives == 0) {
-    this.lives = 3;
-    this.points = 0;
+    this.alive = false;
   }
 
 }
@@ -94,17 +92,23 @@ Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+Player.prototype.resetPosition = function() {
+  this.x = 200;
+  this.y = 380;
+}
+
+Player.prototype.reset = function() {
+  this.lives = 3;
+  this.points = 0;
+  this.alive = true;
+  this.resetPosition();
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var player = new Player();
 var allEnemies = [];
-var spawnEnemies = function(numberOfEnemies) {
-  for (var i = 0; i < numberOfEnemies; i++){
-    allEnemies.push(new Enemy());
-  }
-}
-spawnEnemies(10);
 
 
 

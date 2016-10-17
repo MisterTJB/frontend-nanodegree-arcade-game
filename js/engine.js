@@ -23,7 +23,8 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime,
+        spawnEnemies = spawnEnemiesFactory(2);
 
     canvas.width = 505;
     canvas.height = 606;
@@ -89,6 +90,30 @@ var Engine = (function(global) {
           player.hit = true;
         }
       });
+      if (!player.alive) {
+        restartGame();
+      }
+    }
+
+    function spawnEnemiesFactory(numberOfEnemies) {
+      var wave = 1;
+      function spawnEnemiesWithWave() {
+        console.log("Spawning " + numberOfEnemies + " enemies for wave " + wave);
+        for (var i = 0; i < numberOfEnemies; i++){
+          allEnemies.push(new Enemy(wave));
+        }
+        numberOfEnemies++;
+        if (numberOfEnemies % 3 == 0) {
+          wave++;
+        }
+
+      }
+      return spawnEnemiesWithWave;
+    }
+
+    function restartGame() {
+      spawnEnemies = spawnEnemiesFactory(2);
+      player.reset();
     }
 
     /* This is called by the update function and loops through all of the
@@ -108,11 +133,11 @@ var Engine = (function(global) {
         ctx.fillText("Lives: " + player.lives + "    Points: " + player.points ,0,45);
 
         var waveOver = allEnemies.reduce (function(a, b) {
-          return a && b.x > canvas.width + 50;
+          return a && b.x > 0;
         }, true);
 
         if (waveOver) {
-          spawnEnemies(10);
+          spawnEnemies();
         }
     }
 
