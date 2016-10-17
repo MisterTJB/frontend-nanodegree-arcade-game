@@ -80,7 +80,15 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    function checkCollisions() {
+      allEnemies.forEach(function(enemy) {
+        if (enemy.intersects(player)) {
+          player.hit = true;
+        }
+      });
     }
 
     /* This is called by the update function and loops through all of the
@@ -95,6 +103,17 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+
+        ctx.clearRect(0, 0, 500, 100);
+        ctx.fillText("Lives: " + player.lives + "    Points: " + player.points ,0,45);
+
+        var waveOver = allEnemies.reduce (function(a, b) {
+          return a && b.x > canvas.width + 50;
+        }, true);
+
+        if (waveOver) {
+          spawnEnemies(10);
+        }
     }
 
     /* This function initially draws the "game level", it will then call

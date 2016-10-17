@@ -6,6 +6,9 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.x = -Math.floor((Math.random() * 1000));
+    this.y = Math.floor((Math.random() * 3) + 1) * 100;
+    this.speed = Math.floor((Math.random() * 75) + 50);
 };
 
 // Update the enemy's position, required method for game
@@ -14,7 +17,20 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x = this.x + dt * this.speed;
 };
+
+Enemy.prototype.intersects = function(other) {
+  var rightBound = this.x + 75;
+  var leftBound = this.x - 75;
+  var topBound = this.y - 50;
+  var bottomBound = this.y + 50;
+
+  return (other.x < rightBound &&
+          other.x > leftBound &&
+          other.y < bottomBound &&
+          other.y > topBound);
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -24,11 +40,71 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+var Player = function() {
 
+  this.sprite = 'images/char-boy.png';
+  this.x = 200;
+  this.y = 380;
+  this.points = 0;
+  this.hit = false;
+  this.lives = 3
+}
+
+Player.prototype.update = function() {
+  if (this.y == 0) {
+    this.y = 380;
+    this.x = 200;
+    this.points++;
+  }
+
+  if (this.hit) {
+    this.hit = false;
+    this.lives--;
+    this.y = 380;
+    this.x = 200;
+  }
+
+  if (this.lives == 0) {
+    this.lives = 3;
+    this.points = 0;
+  }
+
+}
+
+Player.prototype.handleInput = function(code) {
+
+  switch (code) {
+    case 'left':
+      this.x = Math.max(0, this.x - 100);
+      break;
+    case 'right':
+      this.x = Math.min(400, this.x + 100);
+      break;
+    case 'down':
+      this.y = Math.min(380, this.y + 83);
+      break;
+    case 'up':
+      this.y = Math.max(0, this.y - 83);
+      break;
+
+  }
+}
+
+Player.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+var player = new Player();
+var allEnemies = [];
+var spawnEnemies = function(numberOfEnemies) {
+  for (var i = 0; i < numberOfEnemies; i++){
+    allEnemies.push(new Enemy());
+  }
+}
+spawnEnemies(10);
 
 
 
