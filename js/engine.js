@@ -116,8 +116,8 @@ var Engine = (function(global) {
         }
 
         // Alter the parameters for the next wave to increase difficulty
-        numberOfEnemies++;
-        if (numberOfEnemies % 4 == 0) {
+        numberOfEnemies = Math.min(numberOfEnemies + 1, 5);
+        if (allEnemies.length % 10 == 0) {
           difficulty++;
         }
       }
@@ -146,7 +146,7 @@ var Engine = (function(global) {
         player.update();
 
         ctx.clearRect(0, 0, 500, 100);
-        ctx.fillText("Lives: " + player.lives + "    Points: " + player.points ,0,45);
+        ctx.fillText("Lives: " + player.lives + " Points: " + player.points, 0, 45);
 
         var waveOver = allEnemies.reduce (function(a, b) {
           return a && b.x > 0;
