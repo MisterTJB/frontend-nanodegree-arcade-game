@@ -1,6 +1,20 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+# Getting Started
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+This game is designed to run in a modern web browser. To get started, open `index.html` in your web browser, either by double-clicking the `index.html` file, or by choosing _Open File..._ from your browser's menu.
+
+The game will load and begin automatically; you should be presented with the following screen.
+
+![Gameplay](screenshots/startup.png)
+
+Note, though, that the game requires Javascript to be enabled, and makes use of the HTML `canvas` feature – if you see a blank screen, make sure that Javascript is enabled, and that your browser [supports](http://caniuse.com/#feat=canvas) the `canvas` element.
+
+# Gameplay
+
+The aim of the game is for your player to reach the river on the top row of the board. Be careful not to touch the bugs, though – being intercepted by one of those critters sends you back to the starting square, and you'll lose one of your three lives.
+
+To move the player, use the arrow keys. You can move in any direction, though you'll be confined to the bounds of the game board.
+
+Note that the game will progress in difficulty until your player runs out of lives – expect the bugs to multiply and hasten as the game progresses.
