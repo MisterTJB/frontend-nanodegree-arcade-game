@@ -7,7 +7,7 @@ var Enemy = function(difficulty) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.x = -Math.floor((Math.random() * 500));
-    this.y = Math.floor((Math.random() * 3) + 1) * 100;
+    this.y = ((Math.floor((Math.random() * 3)) * 100) + 40);
     this.speed = Math.floor((Math.random() * 75) + (50 * difficulty));
 }
 
