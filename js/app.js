@@ -1,14 +1,14 @@
 // Enemies our player must avoid
-var Enemy = function(wave) {
+var Enemy = function(difficulty) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = -Math.floor((Math.random() * 1000));
+    this.x = -Math.floor((Math.random() * 500));
     this.y = Math.floor((Math.random() * 3) + 1) * 100;
-    this.speed = Math.floor((Math.random() * 75) + (50 * wave));
+    this.speed = Math.floor((Math.random() * 75) + (50 * difficulty));
 };
 
 // Update the enemy's position, required method for game
@@ -20,6 +20,9 @@ Enemy.prototype.update = function(dt) {
     this.x = this.x + dt * this.speed;
 };
 
+// Determine whether another object intersects with this
+// enemy's bounding box. Returns true if the other object's
+// x and y coordinates fall within the bounding box
 Enemy.prototype.intersects = function(other) {
   var rightBound = this.x + 75;
   var leftBound = this.x - 50;
@@ -51,24 +54,32 @@ var Player = function() {
   this.alive = true;
 }
 
+// Updates the Player object according to game state
 Player.prototype.update = function() {
+
+  // If the Player reaches the river, then increment the point total
   if (this.y == 0) {
     this.points++;
     this.resetPosition()
   }
 
+  // If the Player has been hit, decrement lives and put the player
+  // back on the starting square
   if (this.hit) {
     this.hit = false;
     this.lives--;
     this.resetPosition()
   }
 
+  // If the Player has run out of lives, kill the Player
   if (this.lives == 0) {
     this.alive = false;
   }
 
 }
 
+// Place the Player on the desired square according to the
+// input device, respecting the bounds of the game board
 Player.prototype.handleInput = function(code) {
 
   switch (code) {
@@ -88,15 +99,18 @@ Player.prototype.handleInput = function(code) {
   }
 }
 
+// Draw the Player on the scren
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+// Reset the Player to the initial position
 Player.prototype.resetPosition = function() {
   this.x = 200;
   this.y = 380;
 }
 
+// Reset the Player to its initial state
 Player.prototype.reset = function() {
   this.lives = 3;
   this.points = 0;
@@ -109,8 +123,6 @@ Player.prototype.reset = function() {
 // Place the player object in a variable called player
 var player = new Player();
 var allEnemies = [];
-
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

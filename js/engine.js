@@ -84,34 +84,50 @@ var Engine = (function(global) {
         checkCollisions();
     }
 
+
+    // Iterate through the allEnemies array and check for collisions with the
+    // Player object. If the player is hit, update its `hit` property. If the
+    // Player is killed, restart the game.
     function checkCollisions() {
+
       allEnemies.forEach(function(enemy) {
         if (enemy.intersects(player)) {
           player.hit = true;
         }
       });
+
       if (!player.alive) {
         restartGame();
       }
     }
 
+    // Defines a Factory for spawning new enemies in such a way as to increase the
+    // difficulty from wave to wave. Returns a function that captures both the
+    // wave and the number of enemies spawned in the last iteration, and
+    // updates these variables on each call to the generated function
     function spawnEnemiesFactory(numberOfEnemies) {
-      var wave = 1;
-      function spawnEnemiesWithWave() {
-        console.log("Spawning " + numberOfEnemies + " enemies for wave " + wave);
+      var difficulty = 1;
+
+      // The function that will be returned, capturing both
+      // difficulty and numberOfEnemies
+      function spawnEnemiesWithDifficulty() {
         for (var i = 0; i < numberOfEnemies; i++){
-          allEnemies.push(new Enemy(wave));
-        }
-        numberOfEnemies++;
-        if (numberOfEnemies % 3 == 0) {
-          wave++;
+          allEnemies.push(new Enemy(difficulty));
         }
 
+        // Alter the parameters for the next wave to increase difficulty
+        numberOfEnemies++;
+        if (numberOfEnemies % 4 == 0) {
+          difficulty++;
+        }
       }
-      return spawnEnemiesWithWave;
+
+      return spawnEnemiesWithDifficulty;
     }
 
+    // Reset the parameters of the game to their initial conditions
     function restartGame() {
+      allEnemies = [];
       spawnEnemies = spawnEnemiesFactory(2);
       player.reset();
     }
